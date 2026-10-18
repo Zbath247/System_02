@@ -87,11 +87,11 @@ export const SystemQRCodeCard: React.FC<SystemQRCodeCardProps> = ({
           level="H"
           includeMargin={false}
           imageSettings={{
-            src: '/favicon.svg',
+            src: '/duc-logo.png',
             x: undefined,
             y: undefined,
-            height: 38,
-            width: 38,
+            height: 42,
+            width: 42,
             excavate: true,
           }}
         />

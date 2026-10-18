@@ -1,6 +1,6 @@
 export const en = {
-  appName: 'University Attendance Management System',
-  appSubtitle: 'One Shared System QR Code for Students, Teachers & Staff',
+  appName: 'Attendance System | Digital University of Cambodia (DUC)',
+  appSubtitle: 'One Shared System QR Code for DUC Students, Lecturers & Staff',
 
   // Navigation
   nav: {
