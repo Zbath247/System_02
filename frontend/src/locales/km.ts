@@ -66,7 +66,7 @@ export const km = {
 
   // Registration
   register: {
-    title: 'ចុះឈ្មោះអ្នកប្រើប្រាស់លើកដំបូង',
+    title: 'ចុះឈ្មោះសម្រាប់ Check in or Check out',
     subtitle: 'សូមបំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវ។ ព័ត៌មាននេះនឹងត្រូវបានរក្សាទុកនៅលើទូរស័ព្ទរបស់អ្នក។',
     nameKh: 'គោត្តនាម និងនាម (ជាភាសាខ្មែរ)',
     nameKhPlaceholder: 'ឧ. សុខ សុវណ្ណ',

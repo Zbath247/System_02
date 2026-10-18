@@ -36,14 +36,9 @@ export const Navbar: React.FC = () => {
                 alt="Digital University of Cambodia"
                 className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform"
               />
-              <div className="flex flex-col min-w-0">
-                <span className="font-extrabold text-slate-900 leading-tight text-[11px] xs:text-xs sm:text-sm tracking-tight whitespace-nowrap">
-                  {isKhmer ? 'សាកលវិទ្យាល័យ ឌីជីថលកម្ពុជា' : 'Digital University of Cambodia'}
-                </span>
-                <span className="text-[9.5px] sm:text-[11px] text-brand-700 font-semibold tracking-wide whitespace-nowrap">
-                  {isKhmer ? 'ប្រព័ន្ធគ្រប់គ្រងវត្តមាន (DUC)' : 'Attendance Management System (DUC)'}
-                </span>
-              </div>
+              <span className="font-extrabold text-slate-900 leading-tight text-xs sm:text-base tracking-tight whitespace-nowrap">
+                {isKhmer ? 'សាកលវិទ្យាល័យ ឌីជីថលកម្ពុជា' : 'Digital University of Cambodia'}
+              </span>
             </Link>
           </div>
 

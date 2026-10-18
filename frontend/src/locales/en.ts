@@ -66,7 +66,7 @@ export const en = {
 
   // Registration
   register: {
-    title: 'First-Time User Registration',
+    title: 'Register for Check in or Check out',
     subtitle: 'Please fill in your details accurately. Your session will be saved on this browser.',
     nameKh: 'Full Name in Khmer',
     nameKhPlaceholder: 'e.g. សុខ សុវណ្ណ',
