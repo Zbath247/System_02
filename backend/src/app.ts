@@ -89,13 +89,21 @@ app.get('/api/config/public', (req: Request, res: Response) => {
   );
 
   const primaryIp = physicalIps[0] || localIps[localIps.length - 1] || 'localhost';
+  const isProd = process.env.NODE_ENV === 'production';
+  const cloudPublicAttendanceUrl = 'https://university-attendance-frontend.onrender.com/scan';
+  const resolvedPublicUrl =
+    config.publicAttendanceUrl && !config.publicAttendanceUrl.includes('localhost')
+      ? config.publicAttendanceUrl
+      : isProd
+      ? cloudPublicAttendanceUrl
+      : config.publicAttendanceUrl;
 
   res.json({
     success: true,
-    publicAttendanceUrl: config.publicAttendanceUrl,
+    publicAttendanceUrl: resolvedPublicUrl,
     localIps,
     primaryIp,
-    lanAttendanceUrl: `http://${primaryIp}:5173/scan`,
+    lanAttendanceUrl: isProd ? resolvedPublicUrl : `http://${primaryIp}:5173/scan`,
     systemNameKh: 'ប្រព័ន្ធគ្រប់គ្រងវត្តមានសាកលវិទ្យាល័យ',
     systemNameEn: 'University Attendance Management System',
   });

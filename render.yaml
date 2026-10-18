@@ -27,7 +27,7 @@ services:
           name: university-attendance-frontend
           property: host
       - key: PUBLIC_ATTENDANCE_URL
-        sync: false
+        value: "https://university-attendance-frontend.onrender.com/scan"
       - key: AUTO_APPROVE_STUDENTS
         value: "true"
 
