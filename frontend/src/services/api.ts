@@ -2,11 +2,20 @@ const getApiBase = () => {
   const envUrl = (import.meta as any).env?.VITE_API_BASE_URL;
   if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
     const trimmed = envUrl.trim();
+    if (trimmed === 'university-attendance-backend') {
+      return 'https://university-attendance-backend-8wb3.onrender.com/api';
+    }
     const formatted = trimmed.startsWith('http://') || trimmed.startsWith('https://')
       ? trimmed
       : `https://${trimmed}`;
     return `${formatted.replace(/\/$/, '')}/api`;
   }
+
+  // If running on Render frontend domain, default to Render backend URL
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+    return 'https://university-attendance-backend-8wb3.onrender.com/api';
+  }
+
   return '/api';
 };
 
