@@ -15,11 +15,14 @@ model User {
   nameEn       String            // Full name in English
   category     String            // STUDENT, TEACHER, STAFF, ADMIN
   role         String            @default("STUDENT") // SUPER_ADMIN, ADMIN, TEACHER, STAFF, STUDENT
-  faculty      String            // Faculty or Department
+  gender       String?           // Male / Female (ប្រុស / ស្រី)
+  building     String?           // Building (អគារ ឧ. P247)
+  faculty      String            // Faculty / Department (ដេប៉ាតឺម៉ង់)
   major        String?           // Major or Program
-  classGroup   String?           // Class, Year, Group, Section
+  classGroup   String?           // Class, Year, Group, Section (ថ្នាក់)
+  phone        String?           // Phone number (លេខទូរស័ព្ទ)
+  telegram     String?           // Username Telegram
   email        String?           @unique
-  phone        String?
   photoUrl     String?
   passwordHash String?           // Used for Administrator password login
   status       String            @default("ACTIVE") // PENDING_APPROVAL, ACTIVE, SUSPENDED

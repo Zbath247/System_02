@@ -6,10 +6,12 @@ import { api } from '../services/api';
 import {
   UserPlus,
   AlertCircle,
-  CheckCircle2,
   Clock,
   ArrowRight,
-  Sparkles,
+  Building2,
+  Phone,
+  Send,
+  GraduationCap,
 } from 'lucide-react';
 
 export const RegisterPage: React.FC = () => {
@@ -18,15 +20,16 @@ export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
+    identifier: '',
     nameKh: '',
     nameEn: '',
-    identifier: '',
-    category: 'STUDENT',
+    gender: 'ប្រុស',
+    building: '',
     faculty: '',
-    major: '',
     classGroup: '',
-    email: '',
     phone: '',
+    telegram: '',
+    category: 'STUDENT',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -37,20 +40,17 @@ export const RegisterPage: React.FC = () => {
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
+    if (!formData.identifier.trim()) {
+      newErrors.identifier = isKhmer ? 'សូមបញ្ចូល ID' : 'ID is required';
+    }
     if (!formData.nameKh.trim()) {
       newErrors.nameKh = isKhmer ? 'សូមបញ្ចូលឈ្មោះជាភាសាខ្មែរ' : 'Khmer name is required';
     }
     if (!formData.nameEn.trim()) {
-      newErrors.nameEn = isKhmer ? 'សូមបញ្ចូលឈ្មោះជាភាសាអង់គ្លេស' : 'English name is required';
-    }
-    if (!formData.identifier.trim()) {
-      newErrors.identifier = isKhmer ? 'សូមបញ្ចូលអត្តលេខ ID' : 'Student/Staff ID is required';
+      newErrors.nameEn = isKhmer ? 'សូមបញ្ចូល Name ជាភាសាអង់គ្លេស' : 'English name is required';
     }
     if (!formData.faculty.trim()) {
-      newErrors.faculty = isKhmer ? 'សូមបញ្ចូលមហាវិទ្យាល័យ ឬដេប៉ាតឺម៉ង់' : 'Faculty/Department is required';
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      newErrors.email = isKhmer ? 'អាសយដ្ឋានអ៊ីមែលមិនត្រឹមត្រូវ' : 'Invalid email format';
+      newErrors.faculty = isKhmer ? 'សូមបញ្ចូលដេប៉ាតឺម៉ង់' : 'Department is required';
     }
 
     setErrors(newErrors);
@@ -110,14 +110,14 @@ export const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] py-8 px-4 sm:px-6 lg:px-8 bg-slate-50 flex items-center justify-center">
+    <div className="min-h-[calc(100vh-4rem)] py-6 sm:py-8 px-4 sm:px-6 lg:px-8 bg-slate-50 flex items-center justify-center">
       <div className="max-w-xl w-full bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sm:p-10">
         {/* Header */}
-        <div className="text-center mb-6 sm:mb-8">
+        <div className="text-center mb-6">
           <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-3">
             <UserPlus className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             {t.register.title}
           </h2>
         </div>
@@ -130,11 +130,11 @@ export const RegisterPage: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-          {/* Category Selector */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* User Category Selection */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              {t.register.category} *
+              {t.register.category}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {[
@@ -158,16 +158,16 @@ export const RegisterPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Student/Staff ID */}
+          {/* 1. ID */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              {t.register.identifier} *
+              ID *
             </label>
             <input
               type="text"
               value={formData.identifier}
               onChange={(e) => setFormData({ ...formData, identifier: e.target.value })}
-              placeholder={t.register.identifierPlaceholder}
+              placeholder="ឧ. DUC2024-0417"
               className={`w-full px-4 py-2.5 rounded-xl border text-sm font-mono focus:outline-hidden transition-colors ${
                 errors.identifier
                   ? 'border-rose-400 bg-rose-50/30 focus:border-rose-500'
@@ -179,17 +179,17 @@ export const RegisterPage: React.FC = () => {
             )}
           </div>
 
-          {/* Names (Khmer & English) */}
+          {/* 2. ឈ្មោះ (ភាសាខ្មែរ) & 3. Name (ឡាតាំង) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                {t.register.nameKh} *
+                {isKhmer ? 'ឈ្មោះ' : 'Name (Khmer)'} *
               </label>
               <input
                 type="text"
                 value={formData.nameKh}
                 onChange={(e) => setFormData({ ...formData, nameKh: e.target.value })}
-                placeholder={t.register.nameKhPlaceholder}
+                placeholder="ឧ. ម៉ុក សម្បត្តិ"
                 className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-hidden transition-colors ${
                   errors.nameKh
                     ? 'border-rose-400 bg-rose-50/30 focus:border-rose-500'
@@ -203,13 +203,13 @@ export const RegisterPage: React.FC = () => {
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                {t.register.nameEn} *
+                Name (English) *
               </label>
               <input
                 type="text"
                 value={formData.nameEn}
                 onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
-                placeholder={t.register.nameEnPlaceholder}
+                placeholder="ex. MOK SAMBATH"
                 className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-hidden transition-colors ${
                   errors.nameEn
                     ? 'border-rose-400 bg-rose-50/30 focus:border-rose-500'
@@ -222,17 +222,61 @@ export const RegisterPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Faculty & Major */}
+          {/* 4. ភេទ (Gender) & 5. អគារ (Building) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                {t.register.faculty} *
+                {isKhmer ? 'ភេទ' : 'Gender'}
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { value: 'ប្រុស', label: isKhmer ? 'ប្រុស' : 'Male' },
+                  { value: 'ស្រី', label: isKhmer ? 'ស្រី' : 'Female' },
+                ].map((g) => (
+                  <button
+                    key={g.value}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, gender: g.value })}
+                    className={`py-2.5 px-3 text-xs font-semibold rounded-xl border text-center transition-all ${
+                      formData.gender === g.value
+                        ? 'bg-brand-50 border-brand-500 text-brand-700 shadow-xs font-bold'
+                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {g.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {isKhmer ? 'អគារ' : 'Building'}
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.building}
+                  onChange={(e) => setFormData({ ...formData, building: e.target.value })}
+                  placeholder="ឧ. P247"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 bg-white text-sm focus:outline-hidden transition-colors"
+                />
+                <Building2 className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+
+          {/* 6. ដេប៉ាតឺម៉ង់ (Department) & 7. ថ្នាក់ (Class) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                {isKhmer ? 'ដេប៉ាតឺម៉ង់' : 'Department'} *
               </label>
               <input
                 type="text"
                 value={formData.faculty}
                 onChange={(e) => setFormData({ ...formData, faculty: e.target.value })}
-                placeholder={t.register.facultyPlaceholder}
+                placeholder={isKhmer ? 'ឧ. វិទ្យាសាស្ត្រកុំព្យូទ័រ' : 'e.g. Computer Science'}
                 className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-hidden transition-colors ${
                   errors.faculty
                     ? 'border-rose-400 bg-rose-50/30 focus:border-rose-500'
@@ -246,88 +290,84 @@ export const RegisterPage: React.FC = () => {
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                {t.register.major}
+                {isKhmer ? 'ថ្នាក់' : 'Class / Group'}
               </label>
-              <input
-                type="text"
-                value={formData.major}
-                onChange={(e) => setFormData({ ...formData, major: e.target.value })}
-                placeholder={t.register.majorPlaceholder}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 text-sm focus:outline-hidden bg-white"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.classGroup}
+                  onChange={(e) => setFormData({ ...formData, classGroup: e.target.value })}
+                  placeholder={isKhmer ? 'ឧ. ឆ្នាំទី២ ក្រុមA' : 'e.g. Year 2 Group A'}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 bg-white text-sm focus:outline-hidden transition-colors"
+                />
+                <GraduationCap className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+              </div>
             </div>
           </div>
 
-          {/* Class / Group */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-              {t.register.classGroup}
-            </label>
-            <input
-              type="text"
-              value={formData.classGroup}
-              onChange={(e) => setFormData({ ...formData, classGroup: e.target.value })}
-              placeholder={t.register.classGroupPlaceholder}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 text-sm focus:outline-hidden bg-white"
-            />
-          </div>
-
-          {/* Email & Phone */}
+          {/* 8. លេខទូរស័ព្ទ (Phone) & 9. Username Telegram */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                {t.register.email}
+                {isKhmer ? 'លេខទូរស័ព្ទ' : 'Phone Number'}
               </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="student@university.edu.kh"
-                className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-hidden transition-colors ${
-                  errors.email
-                    ? 'border-rose-400 bg-rose-50/30 focus:border-rose-500'
-                    : 'border-slate-200 focus:border-brand-500 bg-white'
-                }`}
-              />
-              {errors.email && (
-                <p className="text-xs text-rose-600 mt-1">{errors.email}</p>
-              )}
+              <div className="relative">
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="ឧ. 012 345 678"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 bg-white text-sm focus:outline-hidden transition-colors"
+                />
+                <Phone className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+              </div>
             </div>
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                {t.register.phone}
+                Username Telegram
               </label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="012 345 678"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 text-sm focus:outline-hidden bg-white"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={formData.telegram}
+                  onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
+                  placeholder="ឧ. @moksambath"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-brand-500 bg-white text-sm focus:outline-hidden transition-colors"
+                />
+                <Send className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
+              </div>
             </div>
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-md shadow-brand-500/20 transition-all disabled:opacity-50 mt-6 flex items-center justify-center space-x-2"
-          >
-            <span>{loading ? t.common.loading : t.register.submitBtn}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+          <div className="pt-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-brand-600 to-sky-600 hover:from-brand-700 hover:to-sky-700 text-white font-bold rounded-xl shadow-md shadow-brand-500/25 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
+            >
+              {loading ? (
+                <span>{t.common.loading}</span>
+              ) : (
+                <>
+                  <span>{t.register.submitBtn}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
 
-        {/* Link to Option B */}
-        <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-          <p className="text-xs text-slate-500">
-            {t.register.alreadyAccount}{' '}
-            <Link to="/identify" className="font-bold text-brand-600 hover:text-brand-800">
-              {t.identify.title}
+          {/* Identify Option Link */}
+          <div className="text-center pt-2">
+            <Link
+              to="/identify"
+              className="text-xs text-brand-600 hover:text-brand-800 font-medium transition-colors"
+            >
+              {t.register.alreadyAccount}
             </Link>
-          </p>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );
