@@ -30,7 +30,7 @@ export const SystemQRCodePage: React.FC = () => {
 
         {/* Big Printable Card with Active URL */}
         <div className="print:shadow-none print:border-none">
-          <SystemQRCodeCard url={activeUrl} size={300} showActions={true} />
+          <SystemQRCodeCard url={activeUrl} size={300} />
         </div>
       </div>
     </div>
