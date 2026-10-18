@@ -1,0 +1,122 @@
+// SQLite Database Schema for University Attendance Management System (Dev & Testing)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String            @id @default(uuid())
+  identifier   String            @unique // Student ID or Staff ID (normalized)
+  nameKh       String            // Full name in Khmer
+  nameEn       String            // Full name in English
+  category     String            // STUDENT, TEACHER, STAFF, ADMIN
+  role         String            @default("STUDENT") // SUPER_ADMIN, ADMIN, TEACHER, STAFF, STUDENT
+  faculty      String            // Faculty or Department
+  major        String?           // Major or Program
+  classGroup   String?           // Class, Year, Group, Section
+  email        String?           @unique
+  phone        String?
+  photoUrl     String?
+  passwordHash String?           // Used for Administrator password login
+  status       String            @default("ACTIVE") // PENDING_APPROVAL, ACTIVE, SUSPENDED
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  sessions     Session[]
+  attendances  AttendanceEvent[]
+  auditLogs    AuditLog[]
+
+  @@index([identifier])
+  @@index([status])
+  @@index([role])
+  @@index([faculty])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Location {
+  id          String            @id @default(uuid())
+  code        String            @unique
+  nameKh      String
+  nameEn      String
+  description String?
+  category    String            @default("CAMPUS") // CAMPUS, BUILDING, HALL, ROOM, LAB, GATE
+  canCheckIn  Boolean           @default(true)
+  canCheckOut Boolean           @default(true)
+  isActive    Boolean           @default(true) // Soft deactivation to preserve history
+  openTime    String?           // "07:00"
+  closeTime   String?           // "21:00"
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  attendanceEvents AttendanceEvent[]
+
+  @@index([isActive])
+  @@index([code])
+}
+
+model AttendanceEvent {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType       String    // CHECK_IN, CHECK_OUT
+  locationId      String
+  location        Location  @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  timestamp       DateTime  @default(now()) // Server-generated UTC timestamp
+  note            String?
+  idempotencyKey  String?   @unique
+  durationMinutes Int?      // Calculated on Check-out from open Check-in session
+  isCorrection    Boolean   @default(false)
+  correctionReason String?
+  correctedBy     String?
+  createdAt       DateTime  @default(now())
+
+  @@index([userId])
+  @@index([locationId])
+  @@index([timestamp])
+  @@index([eventType])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  action     String   // USER_REGISTERED, USER_APPROVED, USER_SUSPENDED, SESSION_REVOKED, etc.
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  targetId   String?
+  targetType String?
+  details    String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+}
