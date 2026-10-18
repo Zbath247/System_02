@@ -29,13 +29,37 @@ async function main() {
 
   // 2. Super Administrator
   const adminSalt = await bcrypt.genSalt(10);
-  const adminPasswordHash = await bcrypt.hash('Admin@ChangeMe2026!', adminSalt);
+  const newAdminPasswordHash = await bcrypt.hash('admin@123', adminSalt);
 
-  const admin = await prisma.user.upsert({
+  // Primary admin with username 'admin'
+  const adminUser = await prisma.user.upsert({
+    where: { identifier: 'admin' },
+    update: {
+      role: 'SUPER_ADMIN',
+      status: 'ACTIVE',
+      passwordHash: newAdminPasswordHash,
+    },
+    create: {
+      identifier: 'admin',
+      nameKh: 'អ្នកគ្រប់គ្រងប្រព័ន្ធ',
+      nameEn: 'System Administrator',
+      category: 'ADMIN',
+      role: 'SUPER_ADMIN',
+      faculty: 'Information Technology',
+      email: 'admin@duc.edu.kh',
+      phone: '+85512345678',
+      passwordHash: newAdminPasswordHash,
+      status: 'ACTIVE',
+    },
+  });
+
+  // Also update ADMIN001 to password admin@123 for backward compatibility
+  await prisma.user.upsert({
     where: { identifier: 'ADMIN001' },
     update: {
       role: 'SUPER_ADMIN',
       status: 'ACTIVE',
+      passwordHash: newAdminPasswordHash,
     },
     create: {
       identifier: 'ADMIN001',
@@ -46,11 +70,11 @@ async function main() {
       faculty: 'Information Technology',
       email: 'admin@university.edu.kh',
       phone: '+85512345678',
-      passwordHash: adminPasswordHash,
+      passwordHash: newAdminPasswordHash,
       status: 'ACTIVE',
     },
   });
-  console.log('✅ Admin account seeded:', admin.identifier, admin.email);
+  console.log('✅ Admin accounts seeded:', adminUser.identifier, 'with password admin@123');
 
   // 3. Active Locations
   const locations = [

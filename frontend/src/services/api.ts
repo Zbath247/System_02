@@ -1,4 +1,16 @@
-const API_BASE = '/api';
+const getApiBase = () => {
+  const envUrl = (import.meta as any).env?.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    const trimmed = envUrl.trim();
+    const formatted = trimmed.startsWith('http://') || trimmed.startsWith('https://')
+      ? trimmed
+      : `https://${trimmed}`;
+    return `${formatted.replace(/\/$/, '')}/api`;
+  }
+  return '/api';
+};
+
+export const API_BASE = getApiBase();
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined>;
@@ -21,10 +33,13 @@ export async function request<T = any>(endpoint: string, options: RequestOptions
     }
   }
 
+  const sessionToken = localStorage.getItem('uni_auth_token');
+
   const config: RequestInit = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      ...(sessionToken ? { 'X-Session-Token': sessionToken } : {}),
       ...headers,
     },
     credentials: 'include', // Include HTTP-only session cookies
@@ -43,6 +58,9 @@ export async function request<T = any>(endpoint: string, options: RequestOptions
       error.status = response.status;
       error.data = data;
       throw error;
+    }
+    if (data.token) {
+      localStorage.setItem('uni_auth_token', data.token);
     }
     return data as T;
   }
@@ -66,7 +84,13 @@ export const api = {
     request('/auth/identify', { method: 'POST', body: JSON.stringify(data) }),
   adminLogin: (data: { identifier: string; password: string }) =>
     request('/auth/admin/login', { method: 'POST', body: JSON.stringify(data) }),
-  logout: () => request('/auth/logout', { method: 'POST' }),
+  logout: async () => {
+    try {
+      return await request('/auth/logout', { method: 'POST' });
+    } finally {
+      localStorage.removeItem('uni_auth_token');
+    }
+  },
 
   // Locations
   getActiveLocations: () => request('/locations/active'),
@@ -106,6 +130,10 @@ export const api = {
         }
       });
     }
-    return `/api/reports/attendance/export?${searchParams.toString()}`;
+    const token = localStorage.getItem('uni_auth_token');
+    if (token) {
+      searchParams.append('token', token);
+    }
+    return `${API_BASE}/reports/attendance/export?${searchParams.toString()}`;
   },
 };

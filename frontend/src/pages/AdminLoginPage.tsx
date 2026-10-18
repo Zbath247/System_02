@@ -115,12 +115,12 @@ export const AdminLoginPage: React.FC = () => {
           </div>
         </form>
 
-        {/* Demo Credentials hint in dev mode */}
+        {/* Demo Credentials hint */}
         <div className="mt-8 p-3.5 bg-slate-900/80 border border-slate-700/60 rounded-2xl text-[11px] text-slate-400 text-center">
           <p className="font-semibold text-slate-300 mb-1">
-            {isKhmer ? 'គណនីអភិបាលគំរូ (Development Seed):' : 'Default Seed Admin Account:'}
+            {isKhmer ? 'គណនីអភិបាល (Admin Credentials):' : 'Admin Credentials:'}
           </p>
-          <p className="font-mono text-amber-400">ADMIN001 / Admin@ChangeMe2026!</p>
+          <p className="font-mono text-amber-400 font-bold">admin / admin@123</p>
         </div>
       </div>
     </div>

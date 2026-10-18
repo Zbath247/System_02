@@ -55,7 +55,7 @@ async function createServerSession(userId: string, req: Request, res: Response) 
   res.cookie(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     secure: config.cookieSecure,
-    sameSite: 'lax',
+    sameSite: config.cookieSecure ? 'none' : 'lax',
     domain: config.cookieDomain,
     expires: expiresAt,
   });
@@ -144,12 +144,14 @@ export async function register(req: Request, res: Response, next: NextFunction):
     });
 
     // If active, issue persistent session immediately
+    let sessionToken: string | null = null;
     if (user.status === 'ACTIVE') {
-      await createServerSession(user.id, req, res);
+      sessionToken = await createServerSession(user.id, req, res);
     }
 
     res.status(201).json({
       success: true,
+      token: sessionToken,
       message:
         user.status === 'ACTIVE'
           ? 'Registration successful! Welcome to the University Attendance System.'
@@ -243,7 +245,7 @@ export async function identify(req: Request, res: Response, next: NextFunction):
     }
 
     // Successful match -> Issue new persistent session
-    await createServerSession(user.id, req, res);
+    const sessionToken = await createServerSession(user.id, req, res);
 
     await logAuditEvent({
       action: 'IDENTIFY_SUCCESS',
@@ -256,6 +258,7 @@ export async function identify(req: Request, res: Response, next: NextFunction):
 
     res.json({
       success: true,
+      token: sessionToken,
       message: 'Account verified successfully. Welcome back!',
       messageKh: 'ការសម្គាល់គណនីទទួលបានជោគជ័យ! សូមស្វាគមន៍ការត្រឡប់មកវិញ។',
       user: {
@@ -334,7 +337,7 @@ export async function adminLogin(req: Request, res: Response, next: NextFunction
       return;
     }
 
-    await createServerSession(user.id, req, res);
+    const sessionToken = await createServerSession(user.id, req, res);
 
     await logAuditEvent({
       action: 'ADMIN_LOGIN_SUCCESS',
@@ -347,6 +350,7 @@ export async function adminLogin(req: Request, res: Response, next: NextFunction
 
     res.json({
       success: true,
+      token: sessionToken,
       message: 'Administrator sign in successful.',
       messageKh: 'ការចូលប្រើប្រាស់របស់អ្នកគ្រប់គ្រងជោគជ័យ។',
       user: {
@@ -401,7 +405,7 @@ export async function logout(req: Request, res: Response, next: NextFunction): P
     res.clearCookie(SESSION_COOKIE_NAME, {
       httpOnly: true,
       secure: config.cookieSecure,
-      sameSite: 'lax',
+      sameSite: config.cookieSecure ? 'none' : 'lax',
       domain: config.cookieDomain,
     });
 
