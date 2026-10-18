@@ -72,30 +72,32 @@ export const Navbar: React.FC = () => {
               </>
             )}
 
-            <Link
-              to="/system-qr"
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
-                isActive('/system-qr')
-                  ? 'bg-brand-50 text-brand-700 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Share2 className="w-4 h-4" />
-              <span>{t.nav.systemQr}</span>
-            </Link>
-
             {isAdmin && (
-              <Link
-                to="/admin/dashboard"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
-                  location.pathname.startsWith('/admin')
-                    ? 'bg-amber-50 text-amber-700 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
-              >
-                <Shield className="w-4 h-4 text-amber-600" />
-                <span>{t.nav.admin}</span>
-              </Link>
+              <>
+                <Link
+                  to="/system-qr"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
+                    isActive('/system-qr')
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>{t.nav.systemQr}</span>
+                </Link>
+
+                <Link
+                  to="/admin/dashboard"
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${
+                    location.pathname.startsWith('/admin')
+                      ? 'bg-amber-50 text-amber-700 font-semibold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  <Shield className="w-4 h-4 text-amber-600" />
+                  <span>{t.nav.admin}</span>
+                </Link>
+              </>
             )}
           </div>
 

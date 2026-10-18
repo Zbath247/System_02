@@ -322,20 +322,13 @@ export const AttendanceDashboardPage: React.FC = () => {
         </div>
 
         {/* Quick Link to Personal Attendance History */}
-        <div className="flex justify-between items-center px-4">
+        <div className="flex justify-center items-center px-4">
           <Link
             to="/history"
             className="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-brand-600 hover:text-brand-800 transition-colors"
           >
             <History className="w-4 h-4" />
             <span>{t.history.title} &rarr;</span>
-          </Link>
-          <Link
-            to="/system-qr"
-            className="inline-flex items-center space-x-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors"
-          >
-            <Building2 className="w-3.5 h-3.5" />
-            <span>{t.nav.systemQr}</span>
           </Link>
         </div>
       </div>

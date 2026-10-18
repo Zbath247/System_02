@@ -85,7 +85,6 @@ export const App: React.FC = () => {
                 <Route path="/scan" element={<LandingScanPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/identify" element={<IdentifyPage />} />
-                <Route path="/system-qr" element={<SystemQRCodePage />} />
 
                 {/* Authenticated User Attendance Routes */}
                 <Route
@@ -136,6 +135,14 @@ export const App: React.FC = () => {
                   element={
                     <AdminProtectedRoute>
                       <AdminReportsPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/system-qr"
+                  element={
+                    <AdminProtectedRoute>
+                      <SystemQRCodePage />
                     </AdminProtectedRoute>
                   }
                 />
