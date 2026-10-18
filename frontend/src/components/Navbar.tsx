@@ -29,18 +29,18 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Brand */}
-          <div className="flex items-center min-w-0">
-            <Link to="/scan" className="flex items-center space-x-2.5 group">
+          <div className="flex items-center min-w-0 pr-2">
+            <Link to="/scan" className="flex items-center space-x-2 sm:space-x-3 group">
               <img
                 src="/duc-logo.png"
                 alt="Digital University of Cambodia"
                 className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform"
               />
               <div className="flex flex-col min-w-0">
-                <span className="font-extrabold text-slate-900 leading-tight text-xs sm:text-sm tracking-tight truncate">
+                <span className="font-extrabold text-slate-900 leading-tight text-[11px] xs:text-xs sm:text-sm tracking-tight whitespace-nowrap">
                   {isKhmer ? 'សាកលវិទ្យាល័យ ឌីជីថលកម្ពុជា' : 'Digital University of Cambodia'}
                 </span>
-                <span className="text-[10px] sm:text-[11px] text-brand-700 font-semibold tracking-wide truncate">
+                <span className="text-[9.5px] sm:text-[11px] text-brand-700 font-semibold tracking-wide whitespace-nowrap">
                   {isKhmer ? 'ប្រព័ន្ធគ្រប់គ្រងវត្តមាន (DUC)' : 'Attendance Management System (DUC)'}
                 </span>
               </div>
