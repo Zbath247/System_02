@@ -290,8 +290,9 @@ export async function adminLogin(req: Request, res: Response, next: NextFunction
     const user = await prisma.user.findFirst({
       where: {
         OR: [
-          { identifier: normalizeIdentifier(identifierOrEmail) },
-          { email: identifierOrEmail.toLowerCase() },
+          { identifier: { equals: normalizeIdentifier(identifierOrEmail), mode: 'insensitive' } },
+          { identifier: { equals: identifierOrEmail, mode: 'insensitive' } },
+          { email: { equals: identifierOrEmail.toLowerCase(), mode: 'insensitive' } },
         ],
       },
     });

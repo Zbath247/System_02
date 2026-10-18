@@ -31,16 +31,16 @@ async function main() {
   const adminSalt = await bcrypt.genSalt(10);
   const newAdminPasswordHash = await bcrypt.hash('admin@123', adminSalt);
 
-  // Primary admin with username 'admin'
+  // Primary admin with username 'ADMIN'
   const adminUser = await prisma.user.upsert({
-    where: { identifier: 'admin' },
+    where: { identifier: 'ADMIN' },
     update: {
       role: 'SUPER_ADMIN',
       status: 'ACTIVE',
       passwordHash: newAdminPasswordHash,
     },
     create: {
-      identifier: 'admin',
+      identifier: 'ADMIN',
       nameKh: 'អ្នកគ្រប់គ្រងប្រព័ន្ធ',
       nameEn: 'System Administrator',
       category: 'ADMIN',
